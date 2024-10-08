@@ -1,0 +1,14 @@
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.instance.HazelcastInstanceFactory;
+
+public class ScaleUp {
+    public static void main(String[] args) {
+        // Assuming the scaling condition is met
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+        String newMember = "new-member-ip:port"; // Replace with the actual member details
+
+        hazelcastInstance.getCluster().getMembers().add(newMember);
+        // Logic to scale down when the load decreases
+    }
+}
