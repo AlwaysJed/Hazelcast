@@ -1,0 +1,24 @@
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.spi.properties.HazelcastProperty;
+
+public class AdaptiveScalingConfig {
+    public static void main(String[] args) {
+        Config config = new Config();
+        config.setClusterName("my-cluster");
+
+        // Configure adaptive scaling
+        config.getNetworkConfig()
+            .getJoin()
+            .getMulticastConfig()
+            .setEnabled(true);
+
+        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_ENABLED.getName()).setValue("true");
+        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_MIN_SIZE.getName()).setValue("1");
+        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_MAX_SIZE.getName()).setValue("10");
+
+        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
+        // Your application logic here
+    }
+}
