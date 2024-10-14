@@ -1,24 +1,51 @@
-import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.spi.properties.HazelcastProperty;
+import com.hazelcast.cluster.Cluster;
 
-public class AdaptiveScalingConfig {
+public class AdaptiveScaling {
+
+    private HazelcastInstance hazelcastInstance;
+
+    public AdaptiveScaling() {
+        hazelcastInstance = Hazelcast.newHazelcastInstance();
+    }
+
+    public void monitorAndScale() {
+        while (true) {
+            Cluster cluster = hazelcastInstance.getCluster();
+            double cpuLoad = getCpuLoad(); // Implement this to get the current CPU load
+
+            if (cpuLoad > 0.8) {
+                scaleUp();
+            } else if (cpuLoad < 0.4) {
+                scaleDown();
+            }
+
+            try {
+                Thread.sleep(5000); // Check every 5 seconds
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void scaleUp() {
+        System.out.println("Scaling Up...");
+        // Logic to add a new member (e.g., using cloud provider API)
+    }
+
+    private void scaleDown() {
+        System.out.println("Scaling Down...");
+        // Logic to remove a member (e.g., using cloud provider API)
+    }
+
+    private double getCpuLoad() {
+        // Implement logic to get the current CPU load
+        return Math.random(); // Placeholder for actual CPU load calculation
+    }
+
     public static void main(String[] args) {
-        Config config = new Config();
-        config.setClusterName("my-cluster");
-
-        // Configure adaptive scaling
-        config.getNetworkConfig()
-            .getJoin()
-            .getMulticastConfig()
-            .setEnabled(true);
-
-        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_ENABLED.getName()).setValue("true");
-        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_MIN_SIZE.getName()).setValue("1");
-        config.getProperty(HazelcastProperty.ADAPTIVE_SCALING_MAX_SIZE.getName()).setValue("10");
-
-        HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
-        // Your application logic here
+        AdaptiveScaling scaling = new AdaptiveScaling();
+        scaling.monitorAndScale();
     }
 }
