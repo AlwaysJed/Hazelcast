@@ -1,6 +1,7 @@
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.cluster.Cluster;
+import com.hazelcast.cluster.Cluster; // Import the Cluster class
+import com.hazelcast.config.Config;
 
 public class AdaptiveScaling {
 
